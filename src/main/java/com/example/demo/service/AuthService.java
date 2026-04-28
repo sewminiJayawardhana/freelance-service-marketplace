@@ -14,6 +14,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public String register(RegisterRequest request) {
         User user = new User();
@@ -33,7 +34,7 @@ public class AuthService {
 
         // 2. Password එක check කරනවා (Raw password vs Encoded password)
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return "Login Successful! Welcome " + user.getUsername();
+            return jwtService.generateToken(user.getUsername());
         } else {
             throw new RuntimeException("Invalid password!");
         }
